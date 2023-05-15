@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import QRCodeStyling from 'qr-code-styling';
 import './App.css';
 
-function QRGenerator() {
+const App = () => {
   const [data, setData] = useState('https://techstacksph.com/');
   const [size, setSize] = useState(10);
   const [logo, setLogo] = useState(null);
@@ -11,21 +11,18 @@ function QRGenerator() {
   const [dotColor1, setDotColor1] = useState('#000000');
   const [dotColor2, setDotColor2] = useState('#000000');
   const [bgColor, setBgColor] = useState('#ffffff');
-
-  let qrCode;
+  const [qrCode, setQRCode] = useState(null);
+  const logoRef = useRef(null);
 
   useEffect(() => {
-    renderQRCode();
-  }, [size, data, dotMode, dotColor1, dotColor2, bgColor]);
-
-  const renderQRCode = () => {
     const options = {
       width: size * 10,
       height: size * 10,
       type: 'png',
       data: data,
+      image: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
       dotsOptions: {
-        color: dotColor1,
+        color: '#4267b2',
         type: dotMode,
         gradient: {
           type: 'linear',
@@ -46,16 +43,10 @@ function QRGenerator() {
       },
     };
 
-    if (logo) {
-      options.image = URL.createObjectURL(logo);
-    }
-
-    qrCode = new QRCodeStyling(options);
-    const canvasEl = document.querySelector('#canvas');
-    canvasEl.innerHTML = '';
-    qrCode.append(canvasEl);
-    canvasEl.nextElementSibling.innerHTML = `${options.width}px x ${options.height}px`;
-  };
+    const qrCodeInstance = new QRCodeStyling(options);
+    setQRCode(qrCodeInstance);
+    render(qrCodeInstance);
+  }, [data, size, dotMode, dotColor1, dotColor2, bgColor]);
 
   const handleDataChange = (e) => {
     setData(e.target.value);
@@ -65,18 +56,8 @@ function QRGenerator() {
     setSize(e.target.value);
   };
 
-  const handleLogoChange = (e) => {
-    if (e.target.files.length > 0) {
-      setLogo(e.target.files[0]);
-    }
-  };
-
-  const handleClearClick = () => {
-    setLogo(null);
-  };
-
   const handleMarginChange = (e) => {
-    options.imageOptions = { margin: e.target.value };
+    setMargin(e.target.value);
   };
 
   const handleDotModeChange = (e) => {
@@ -95,14 +76,36 @@ function QRGenerator() {
     setBgColor(e.target.value);
   };
 
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      setLogo(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleClearClick = () => {
+    setLogo(null);
+  };
+
   const handleDownloadClick = () => {
     if (qrCode) {
       qrCode.download({ name: 'qr', extension: 'svg' });
     }
   };
 
+  const render = (qrCodeInstance) => {
+    const canvasEl = document.querySelector('#canvas');
+    canvasEl.innerHTML = '';
+    qrCodeInstance.append(canvasEl);
+    canvasEl.nextElementSibling.innerHTML = `${size * 10}px x ${size * 10}px`;
+  };
+
   const browse = () => {
-    document.getElementById('logo').click();
+    if (logoRef.current) {
+      logoRef.current.click();
+    }
   };
 
   return (
@@ -125,16 +128,17 @@ function QRGenerator() {
             min="10"
             max="30"
             value={size}
-            onChange={handleSizeChange}
             className="input-1x"
+            onChange={handleSizeChange}
           />
         </div>
         <div className="input-wrap">
-          <label htmlFor="logo">Logo</label>
+        <label htmlFor="logo">Logo</label>
           <input
             type="file"
             id="logo"
             hidden
+            ref={logoRef}
             onChange={handleLogoChange}
           />
           <div className="input-2x">
@@ -157,7 +161,7 @@ function QRGenerator() {
             min="1"
             max="30"
             className="input-1x"
-            onInput={handleMarginChange}
+            onChange={handleMarginChange}
           />
         </div>
         <div className="input-wrap">
@@ -206,8 +210,13 @@ function QRGenerator() {
       </div>
       <div className="display">
         <div id="canvas"></div>
-        <p>{size * 10}px X {size * 10}px</p>
-        <button className="btn-download" id="btn-dl" type="button" onClick={handleDownloadClick}>
+        <p>{`${size * 10}px X ${size * 10}px`}</p>
+        <button
+          className="btn-download"
+          id="btn-dl"
+          type="button"
+          onClick={handleDownloadClick}
+        >
           Download
         </button>
       </div>
@@ -215,4 +224,4 @@ function QRGenerator() {
   );
 }
 
-export default QRGenerator;
+export default App;

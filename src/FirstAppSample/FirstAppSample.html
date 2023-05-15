@@ -1,0 +1,90 @@
+<!-- import { useState, useRef } from 'react';
+import './App.css';
+import QRCode from 'react-qr-code';
+import html2canvas from 'html2canvas';
+
+const App = () => {
+  const [word, setWord] = useState("");
+  const [size, setSize] = useState(200);
+  const [bgColor, setBgColor] = useState("#FFFFFF");
+  const [dotColor, setDotColor] = useState("#000000");
+  const [shape, setShape] = useState("square");
+  const qrCodeRef = useRef(null);
+
+  const handleDownloadQRCode = () => {
+    const qrCodeContainer = qrCodeRef.current;
+    const containerWidth = qrCodeContainer.offsetWidth;
+    const containerHeight = qrCodeContainer.offsetHeight;
+
+    html2canvas(qrCodeContainer, {
+      useCORS: true,
+      width: containerWidth,
+      height: containerHeight,
+    }).then((canvas) => {
+      const dataURL = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = dataURL;
+      link.download = 'qrcode.png';
+      link.click();
+    });
+  };
+
+  return (
+    <div className="App">
+      <h1>QRCODE GENERATOR</h1>
+      <div className='qrContentContainer'>
+        <div className='contentContainer'>
+          <textarea
+            className='inputStyle'
+            placeholder='Type a text here'
+            value={word}
+            onChange={(e) => setWord(e.target.value)}
+          ></textarea>
+          <div className='extraContainer'>
+            <input
+              type="range"
+              min={200}
+              max={500}
+              placeholder="Size"
+              value={size}
+              onChange={(e) => setSize(Number(e.target.value))}
+            />
+            <input
+              type="color"
+              placeholder="Background Color"
+              value={bgColor}
+              onChange={(e) => setBgColor(e.target.value)}
+            />
+            <input
+              type="color"
+              placeholder="Dot Color"
+              value={dotColor}
+              onChange={(e) => setDotColor(e.target.value)}
+            />
+            <select
+              value={shape}
+              onChange={(e) => setShape(e.target.value)}
+            >
+              <option value="square">Square</option>
+              <option value="rounded">Rounded</option>
+              <option value="classy">Classy</option>
+            </select>
+            <button onClick={handleDownloadQRCode}>Download QR Code</button>
+          </div>
+        </div>
+        <div className='qrContainer' ref={qrCodeRef}>
+          <QRCode
+            value={word}
+            size={size}
+            bgColor={bgColor}
+            fgColor={dotColor}
+            level='L'
+            style={{ borderRadius: shape === 'rounded' ? '50%' : '0%', boxShadow: shape === 'classy' ? '0 0 10px rgba(0, 0, 0, 0.2)' : 'none' }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App; -->
