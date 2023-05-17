@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
 
 *{
     font-family: "Poppins", sans-serif;
@@ -13,7 +15,9 @@ body{
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    padding: 5%;
     background-color: #0086b3;
+    
 }
 
 .container{
@@ -29,11 +33,12 @@ body{
     min-width: 380px;
 }
 
-.input-wrap{
+.input-wrap, .input-wrap2{
     align-items: flex-start;
     display: flex;
     text-align: left;
     padding-bottom: 10px;
+    width: 100%;
 }
 
 .input-1x{
@@ -44,11 +49,23 @@ body{
     width: 50%;
 }
 
+.input-2xx{
+    width: 20%;
+}
+
 label{
     width: 30%;
 }
 
+.input-wrap2 label{
+    width: 22%;
+}
+
 .display{
+    width: 100%;
+}
+
+.canvas{
     width: 100%;
 }
 
@@ -80,4 +97,32 @@ button{
     padding: 10px;
     cursor: pointer;
     width: 100%;
+}
+
+@media (max-width: 725px){
+    .container{
+        flex-wrap: wrap;
+        width: 75%;
+        padding: 5%;
+        margin: 0 auto;
+    }
+    .setting{
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+@media (max-width: 625px){
+    .input-wrap{
+        flex-direction: column;
+    }
+    .input-1x, .input-2x, .input-2xx{
+        width: 100%;
+    }
+}
+
+@media (max-width: 620px){
+    .input-1x, .input-2x, .input-2xx{
+        width: 100%;
+    }
 }

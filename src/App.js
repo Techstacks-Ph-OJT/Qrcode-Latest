@@ -12,14 +12,15 @@ function QRGenerator() {
   const [dotColor2, setDotColor2] = useState('#000000');
   const [bgColor, setBgColor] = useState('#ffffff');
 
-  let qrCode;
-
   useEffect(() => {
     renderQRCode();
-  }, [size, data, dotMode, dotColor1, dotColor2, bgColor]);
+  }, [size, data, dotMode, dotColor1, dotColor2, bgColor, logo]);
+
+  let qrCode;
+  let options; // Define options variable
 
   const renderQRCode = () => {
-    const options = {
+    options = {
       width: size * 10,
       height: size * 10,
       type: 'png',
@@ -44,10 +45,14 @@ function QRGenerator() {
       backgroundOptions: {
         color: bgColor,
       },
+      imageOptions: {
+        margin: margin,
+      },
     };
 
     if (logo) {
       options.image = URL.createObjectURL(logo);
+      options.imageOptions.margin = margin;
     }
 
     qrCode = new QRCodeStyling(options);
@@ -68,16 +73,21 @@ function QRGenerator() {
   const handleLogoChange = (e) => {
     if (e.target.files.length > 0) {
       setLogo(e.target.files[0]);
+      
     }
   };
 
   const handleClearClick = () => {
     setLogo(null);
-  };
+    const fileInput = document.getElementById('logo');
+    fileInput.value = ''; // Clear the file input value
+  };  
 
   const handleMarginChange = (e) => {
-    options.imageOptions = { margin: e.target.value };
-  };
+    const newMargin = e.target.value;
+    setMargin(newMargin);
+    renderQRCode(); // Re-render the QR code with the updated margin
+  };  
 
   const handleDotModeChange = (e) => {
     setDotMode(e.target.value);
@@ -129,7 +139,7 @@ function QRGenerator() {
             className="input-1x"
           />
         </div>
-        <div className="input-wrap">
+        <div className="input-wrap2">
           <label htmlFor="logo">Logo</label>
           <input
             type="file"
@@ -137,12 +147,12 @@ function QRGenerator() {
             hidden
             onChange={handleLogoChange}
           />
-          <div className="input-2x">
+          <div className="input-2xx">
             <a href="#" onClick={browse}>
               <span className="material-symbols-outlined">photo_camera</span>
             </a>
           </div>
-          <div className="input-2x">
+          <div className="input-2xx">
             <button id="clear" type="button" onClick={handleClearClick}>
               Clear
             </button>
@@ -154,7 +164,7 @@ function QRGenerator() {
             type="range"
             id="margin"
             value={margin}
-            min="1"
+            min="0"
             max="30"
             className="input-1x"
             onInput={handleMarginChange}
@@ -205,7 +215,7 @@ function QRGenerator() {
         </div>
       </div>
       <div className="display">
-        <div id="canvas"></div>
+        <div id="canvas" className="canvas"></div>
         <p>{size * 10}px X {size * 10}px</p>
         <button className="btn-download" id="btn-dl" type="button" onClick={handleDownloadClick}>
           Download
